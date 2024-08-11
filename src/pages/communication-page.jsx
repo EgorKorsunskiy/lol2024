@@ -6,6 +6,7 @@ import { collection, getDocs, addDoc } from "firebase/firestore";
 import { Button } from "@headlessui/react";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useNavigate } from "react-router-dom";
+import dayjs from "dayjs";
 
 function CommunicationPage() {
     const { db } = useContext(DBContext);
@@ -23,7 +24,14 @@ function CommunicationPage() {
             id: doc.id,
         }));
 
-        setPosts(postsData);
+        setPosts(
+            postsData.sort((a, b) => {
+                if (dayjs(a.timestamp).isBefore(dayjs(b.timestamp))) {
+                    return 1;
+                }
+                return -1;
+            })
+        );
     };
 
     useEffect(() => {
@@ -50,6 +58,7 @@ function CommunicationPage() {
             authorImage: user?.picture,
             likes: 0,
             dislikes: 0,
+            timestamp: dayjs().format(),
         });
         editorRef.current.setContent("");
         setLoading(false);
