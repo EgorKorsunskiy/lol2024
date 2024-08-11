@@ -1,18 +1,58 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
     Button,
-    Description,
     Dialog,
     DialogPanel,
     DialogTitle,
 } from "@headlessui/react";
+import { AnimatePresence, motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
+import { DBContext } from "../contexts";
+import {
+    collection,
+    getDocs,
+    addDoc
+} from "firebase/firestore";
 
 function HomePage() {
-    const [modalOpen, setModalOpen] = useState(false);
+    const [isOpen, setIsOpen] = useState(false);
+    const [coins, setCoins] = useState(0);
     const { loginWithRedirect, logout, user, isAuthenticated } = useAuth0();
     const navigate = useNavigate();
+    const { db } = useContext(DBContext);
+    const usersCollectionRef = collection(db, "users");
+
+    const getUsers = async () => {
+        const data = await getDocs(usersCollectionRef);
+        const userData = data.docs.map((doc) => doc.data());
+
+        return userData;
+    };
+
+    const createUser = async (userId, coins) => {
+        await addDoc(usersCollectionRef, {
+            id: userId,
+            coins,
+        });
+    };
+
+    const handleUser = async () => {
+        const userData = await getUsers();
+        const currentUser = userData.find((userEl) => userEl.id === user.sub);
+
+        if (!currentUser) {
+            createUser(user.sub, 0);
+        } else {
+            setCoins(currentUser.coins);
+        }
+    };
+
+    useEffect(() => {
+        if (isAuthenticated) {
+            handleUser();
+        }
+    }, [isAuthenticated]);
 
     return (
         <div className="mt-48">
@@ -25,7 +65,10 @@ function HomePage() {
                         <p className="font-mono text-white">Sign in</p>
                     </Button>
                 ) : (
-                    <div className="h-12 w-12 rounded-full overflow-hidden">
+                    <div
+                        className="h-12 w-12 rounded-full overflow-hidden cursor-pointer"
+                        onClick={() => setIsOpen(true)}
+                    >
                         <img src={user?.picture} />
                     </div>
                 )}
@@ -44,41 +87,59 @@ function HomePage() {
                     </Button>
                 )}
             </div>
-            <Dialog
-                open={modalOpen}
-                as="div"
-                className="relative z-10 focus:outline-none"
-                onClose={() => setModalOpen(false)}
-            >
-                <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
-                    <div className="flex min-h-full items-center justify-center p-4">
-                        <DialogPanel
-                            transition
-                            className="w-full max-w-md rounded-xl bg-white/5 p-6 backdrop-blur-2xl duration-300 ease-out data-[closed]:transform-[scale(95%)] data-[closed]:opacity-0"
-                        >
-                            <DialogTitle
-                                as="h3"
-                                className="text-base/7 font-medium text-white"
+            <AnimatePresence>
+                {isOpen && (
+                    <Dialog
+                        static
+                        open={isOpen}
+                        onClose={() => setIsOpen(false)}
+                        className="relative z-50"
+                    >
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            className="fixed inset-0 bg-black/30"
+                        />
+                        <div className="fixed inset-0 flex w-screen items-center justify-center p-4">
+                            <DialogPanel
+                                as={motion.div}
+                                initial={{ opacity: 0, scale: 0.95 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                exit={{ opacity: 0, scale: 0.95 }}
+                                className="flex justify-center w-fit max-w-lg rounded-md space-y-4 bg-white py-12 px-24 w-96"
                             >
-                                Payment successful
-                            </DialogTitle>
-                            <p className="mt-2 text-sm/6 text-white/50">
-                                Your payment has been successfully submitted.
-                                We’ve sent you an email with all of the details
-                                of your order.
-                            </p>
-                            <div className="mt-4">
-                                <Button
-                                    className="inline-flex items-center gap-2 rounded-md bg-gray-700 py-1.5 px-3 text-sm/6 font-semibold text-white shadow-inner shadow-white/10 focus:outline-none data-[hover]:bg-gray-600 data-[focus]:outline-1 data-[focus]:outline-white data-[open]:bg-gray-700"
-                                    onClick={() => setModalOpen(false)}
-                                >
-                                    Got it, thanks!
-                                </Button>
-                            </div>
-                        </DialogPanel>
-                    </div>
-                </div>
-            </Dialog>
+                                <div>
+                                    <DialogTitle className="font-mono text-3xl font-bold">
+                                        Details
+                                    </DialogTitle>
+                                    <div className="mt-12 flex flex-col items-start justify-between">
+                                        <p className="font-mono text-lg">
+                                            Nickname: {user.nickname}
+                                        </p>
+                                        <p className="font-mono text-lg">
+                                            Email: {user.email}
+                                        </p>
+                                        <p className="font-mono text-lg">
+                                            Coins: {coins}
+                                        </p>
+                                    </div>
+                                    <div className="flex justify-center gap-4 mt-12">
+                                        <Button
+                                            className="bg-indigo-500 h-10 w-full rounded-md"
+                                            onClick={() => setIsOpen(false)}
+                                        >
+                                            <p className="font-mono text-white">
+                                                Close
+                                            </p>
+                                        </Button>
+                                    </div>
+                                </div>
+                            </DialogPanel>
+                        </div>
+                    </Dialog>
+                )}
+            </AnimatePresence>
             <div className="flex justify-center">
                 <h1 className="font-mono text-[6rem]">LOL 2024</h1>
             </div>
