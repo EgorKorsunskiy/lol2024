@@ -11,19 +11,30 @@ function PostView({ nickname, picture, post, fetchPosts }) {
         const userDoc = doc(db, "communication_posts", post.id);
         const newFields = { [option]: post[option] + 1 };
         await updateDoc(userDoc, newFields);
-        fetchPosts()
+        fetchPosts();
     };
 
     return (
         <div className="relative rounded-xl shadow-lg p-6">
             <div className="flex gap-4 mb-4">
-                <p className="font-mono text-md">Posted by</p>
-                <div className="flex gap-2 items-center">
-                    <img className="h-6 w-6 rounded-full" src={picture} />
+                {nickname && picture ? (
+                    <>
+                        <p className="font-mono text-md">Posted by</p>
+                        <div className="flex gap-2 items-center">
+                            <img
+                                className="h-6 w-6 rounded-full"
+                                src={picture}
+                            />
+                            <p className="font-mono font-medium text-md">
+                                {nickname}
+                            </p>
+                        </div>
+                    </>
+                ) : (
                     <p className="font-mono font-medium text-md">
-                        {nickname}
+                        Posted anonymously
                     </p>
-                </div>
+                )}
             </div>
             <div dangerouslySetInnerHTML={{ __html: post.content }}></div>
             <div className="flex justify-end gap-6">

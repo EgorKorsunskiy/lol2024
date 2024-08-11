@@ -1,7 +1,10 @@
-import React, { useMemo, useState } from "react";
+import React, { useContext, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { PROBLEMS } from "../constatns/problems";
 import { Input, Button } from "@headlessui/react";
+import { DBContext } from "../contexts";
+import { updateDoc, doc } from "firebase/firestore";
+import { useAuth0 } from "@auth0/auth0-react";
 
 function ProblemPage() {
     const [answerValue, setAnswerValue] = useState("");
@@ -13,18 +16,23 @@ function ProblemPage() {
         () => PROBLEMS[tabId].levels[problemId],
         [tabId, problemId]
     );
+    const { db } = useContext(DBContext);
 
     const addCoins = async () => {
-        
-    }
+        const coins = localStorage.getItem("coins");
+        const id = localStorage.getItem("id");
+        const userDoc = doc(db, "users", id);
+        const newFields = { coins: +coins + 1 };
+        await updateDoc(userDoc, newFields);
+    };
 
     const handleClick = async () => {
-        setFailed(false)
-        setSolved(false)
+        setFailed(false);
+        setSolved(false);
         if (!answerValue) return;
         if (answerValue == currentProblem.answer) {
             setSolved(true);
-
+            addCoins(PROBLEMS[tabId].reward);
         } else {
             setFailed(true);
         }
@@ -67,7 +75,9 @@ function ProblemPage() {
                 </Button>
                 {solved && (
                     <div className="flex flex-col">
-                        <h4 className={`font-mono text-lg text-center ${getColor()}`}>
+                        <h4
+                            className={`font-mono text-lg text-center ${getColor()}`}
+                        >
                             OK
                         </h4>
                         <p className={`font-mono text-lg ${getColor()}`}>
@@ -77,7 +87,9 @@ function ProblemPage() {
                 )}
                 {failed && (
                     <div className="flex flex-col">
-                        <h4 className={`font-mono text-lg text-center ${getColor()}`}>
+                        <h4
+                            className={`font-mono text-lg text-center ${getColor()}`}
+                        >
                             WA
                         </h4>
                         <p className={`font-mono text-lg ${getColor()}`}>

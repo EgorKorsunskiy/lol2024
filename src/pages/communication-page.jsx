@@ -6,6 +6,7 @@ import { collection, getDocs, addDoc } from "firebase/firestore";
 import { Button } from "@headlessui/react";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useNavigate } from "react-router-dom";
+import { Checkbox } from "@headlessui/react";
 import dayjs from "dayjs";
 
 function CommunicationPage() {
@@ -14,6 +15,7 @@ function CommunicationPage() {
     const postsCollectionRef = collection(db, "communication_posts");
     const [posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [anonymously, setAnonymously] = useState(false);
     const editorRef = useRef(null);
     const navigate = useNavigate();
 
@@ -52,10 +54,20 @@ function CommunicationPage() {
 
     const handlePostSubmission = async () => {
         setLoading(true);
+        console.log(anonymously, anonymously ? "" : user?.picture || "");
+
+        let picture = user?.picture || "";
+        let nickname = user?.nickname || "";
+
+        if (anonymously) {
+            picture = "";
+            nickname = "";
+        }
+
         await addDoc(postsCollectionRef, {
             content: editorRef.current.getContent(),
-            authorNickname: user?.nickname,
-            authorImage: user?.picture,
+            authorNickname: nickname,
+            authorImage: picture,
             likes: 0,
             dislikes: 0,
             timestamp: dayjs().format(),
@@ -117,6 +129,30 @@ function CommunicationPage() {
                                 "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
                         }}
                     />
+                </div>
+                <div
+                    className="mt-4 flex gap-2 cursor-pointer items-center"
+                    onClick={() => setAnonymously((prevState) => !prevState)}
+                >
+                    <Checkbox
+                        checked={anonymously}
+                        onChange={setAnonymously}
+                        className="group block size-5 rounded border bg-white data-[checked]:bg-blue-500 data-[disabled]:cursor-not-allowed data-[disabled]:opacity-50 data-[checked]:data-[disabled]:bg-gray-500"
+                    >
+                        <svg
+                            className="stroke-white opacity-0 group-data-[checked]:opacity-100"
+                            viewBox="0 0 14 14"
+                            fill="none"
+                        >
+                            <path
+                                d="M3 8L6 11L11 3.5"
+                                strokeWidth={2}
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                            />
+                        </svg>
+                    </Checkbox>
+                    <p className="font-mono text-md">Send anonymously</p>
                 </div>
                 <div className="mt-4">
                     <Button

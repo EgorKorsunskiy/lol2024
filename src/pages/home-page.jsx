@@ -25,7 +25,7 @@ function HomePage() {
 
     const getUsers = async () => {
         const data = await getDocs(usersCollectionRef);
-        const userData = data.docs.map((doc) => doc.data());
+        const userData = data.docs.map((doc) => ({...doc.data(), innerId: doc.id}));
 
         return userData;
     };
@@ -45,6 +45,8 @@ function HomePage() {
             createUser(user.sub, 0);
         } else {
             setCoins(currentUser.coins);
+            localStorage.setItem("coins", currentUser.coins)
+            localStorage.setItem("id", currentUser.innerId)
         }
     };
 
