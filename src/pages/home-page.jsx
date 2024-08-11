@@ -99,6 +99,7 @@ function HomePage() {
                 </div>
             </div>
         </div>
+        <img src=“<C:/Users/super/source/repos/lol20241/images/mono> ‘ />
     );
 }
 
