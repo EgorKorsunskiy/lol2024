@@ -14,6 +14,7 @@ import {
     getDocs,
     addDoc
 } from "firebase/firestore";
+import mono from '../images/mono.png';
 
 function HomePage() {
     const [isOpen, setIsOpen] = useState(false);
@@ -159,6 +160,7 @@ function HomePage() {
                     </Button>
                 </div>
             </div>
+            <img src={mono} className="bottom-1 right-1 absolute h-[250px] w-[250px]"></img>
         </div>
     );
 }
