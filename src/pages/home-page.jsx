@@ -8,13 +8,15 @@ import {
 } from "@headlessui/react";
 import { useNavigate } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
-
+import mono from "../images/mono.jpg"
+import welcomeflood from "../images/welcomeflood.png"
 function HomePage() {
     const [modalOpen, setModalOpen] = useState(false);
     const { loginWithRedirect, logout, user, isAuthenticated } = useAuth0();
     const navigate = useNavigate();
 
     return (
+        <>
         <div className="mt-48">
             <div className="absolute flex gap-6 h-12 right-8 top-8 items-center">
                 {!isAuthenticated ? (
@@ -79,9 +81,10 @@ function HomePage() {
                     </div>
                 </div>
             </Dialog>
-            <div className="flex justify-center">
-                <h1 className="font-mono text-[6rem]">LOL 2024</h1>
-            </div>
+            <img src={gamov} className="left-1 top-1 absolute" />
+            <img src={lattebg} className="left-1 top-1 absolute" />
+            <img src={lattedog} className="left-1 top-1 absolute" />
+            <img src={lattecat} className="left-1 top-1 absolute" />
             <div className="mt-[12rem] flex justify-center">
                 <div className="flex gap-6 flex-col">
                     <Button
@@ -99,7 +102,8 @@ function HomePage() {
                 </div>
             </div>
         </div>
-        <img src=“<C:/Users/super/source/repos/lol20241/images/mono> ‘ />
+        <img src={mono} className="left-1 bottom-1 absolute" />
+        </>
     );
 }
 
