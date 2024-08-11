@@ -8,6 +8,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { useNavigate } from "react-router-dom";
 import { Checkbox } from "@headlessui/react";
 import dayjs from "dayjs";
+import floodLogoImage from "../images/floodlogo.png";
 
 function CommunicationPage() {
     const { db } = useContext(DBContext);
@@ -82,92 +83,111 @@ function CommunicationPage() {
 
     return (
         <div>
-            <div className="p-8 px-24 border-b-2 border-indigo-500">
+            <div className="p-8 px-24 flex flex-col items-center">
                 <Button
                     onClick={() => navigate("/")}
                     className="bg-indigo-500 h-10 w-28 rounded-md mb-6"
                 >
                     <p className="font-mono text-white">Main page</p>
                 </Button>
-                <h1 className="font-mono text-4xl">Add new post</h1>
-                <p className="font-mono text-xl mt-2 mb-4">
-                    Here you can add new post...
-                </p>
-                <div className="w-[70%]">
-                    <Editor
-                        apiKey="nfy5gnv77mnta4deqptoi8w8mnf7aautvn5rnhsz3q1d38qs"
-                        onInit={(_evt, editor) => (editorRef.current = editor)}
-                        init={{
-                            height: 300,
-                            menubar: false,
-                            plugins: [
-                                "advlist",
-                                "autolink",
-                                "lists",
-                                "link",
-                                "image",
-                                "charmap",
-                                "preview",
-                                "anchor",
-                                "searchreplace",
-                                "visualblocks",
-                                "code",
-                                "fullscreen",
-                                "insertdatetime",
-                                "media",
-                                "table",
-                                "code",
-                                "help",
-                                "wordcount",
-                            ],
-                            toolbar:
-                                "undo redo | blocks | " +
-                                "bold italic underline strikethrough | alignleft aligncenter " +
-                                "alignright alignjustify | bullist numlist outdent indent | " +
-                                "removeformat | help",
-                            content_style:
-                                "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
-                        }}
-                    />
+                <div>
+                    <img src={floodLogoImage} />
                 </div>
-                <div
-                    className="mt-4 flex gap-2 cursor-pointer items-center"
-                    onClick={() => setAnonymously((prevState) => !prevState)}
-                >
-                    <Checkbox
-                        checked={anonymously}
-                        onChange={setAnonymously}
-                        className="group block size-5 rounded border bg-white data-[checked]:bg-blue-500 data-[disabled]:cursor-not-allowed data-[disabled]:opacity-50 data-[checked]:data-[disabled]:bg-gray-500"
-                    >
-                        <svg
-                            className="stroke-white opacity-0 group-data-[checked]:opacity-100"
-                            viewBox="0 0 14 14"
-                            fill="none"
-                        >
-                            <path
-                                d="M3 8L6 11L11 3.5"
-                                strokeWidth={2}
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                            />
-                        </svg>
-                    </Checkbox>
-                    <p className="font-mono text-md">Send anonymously</p>
-                </div>
-                <div className="mt-4">
-                    <Button
-                        disabled={loading}
-                        className="bg-indigo-500 h-12 w-56 rounded-md"
-                        onClick={handlePostSubmission}
-                    >
-                        <p className="font-mono text-white text-md">
-                            {loading ? "Loading..." : "Publish"}
+                <div className="grid grid-cols-2">
+                    <div className="h-[36rem] overflow-scroll">
+                        <h2 className="font-mono text-4xl my-8 text-center text-white">
+                            Posts
+                        </h2>
+                        <div className="px-24 flex flex-col gap-4">
+                            {postElements}
+                        </div>
+                    </div>
+                    <div className="w-full">
+                        <h1 className="font-mono text-4xl text-white">
+                            Add new post
+                        </h1>
+                        <p className="font-mono text-xl mt-2 mb-4 text-white">
+                            Here you can add new post...
                         </p>
-                    </Button>
+                        <Editor
+                            apiKey="nfy5gnv77mnta4deqptoi8w8mnf7aautvn5rnhsz3q1d38qs"
+                            onInit={(_evt, editor) =>
+                                (editorRef.current = editor)
+                            }
+                            init={{
+                                height: 300,
+                                menubar: false,
+                                plugins: [
+                                    "advlist",
+                                    "autolink",
+                                    "lists",
+                                    "link",
+                                    "image",
+                                    "charmap",
+                                    "preview",
+                                    "anchor",
+                                    "searchreplace",
+                                    "visualblocks",
+                                    "code",
+                                    "fullscreen",
+                                    "insertdatetime",
+                                    "media",
+                                    "table",
+                                    "code",
+                                    "help",
+                                    "wordcount",
+                                ],
+                                toolbar:
+                                    "undo redo | blocks | " +
+                                    "bold italic underline strikethrough | alignleft aligncenter " +
+                                    "alignright alignjustify | bullist numlist outdent indent | " +
+                                    "removeformat | help",
+                                content_style:
+                                    "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
+                            }}
+                        />
+                        <div
+                            className="mt-4 flex gap-2 cursor-pointer items-center"
+                            onClick={() =>
+                                setAnonymously((prevState) => !prevState)
+                            }
+                        >
+                            <Checkbox
+                                checked={anonymously}
+                                onChange={setAnonymously}
+                                className="group block size-5 rounded border bg-white data-[checked]:bg-blue-500 data-[disabled]:cursor-not-allowed data-[disabled]:opacity-50 data-[checked]:data-[disabled]:bg-gray-500"
+                            >
+                                <svg
+                                    className="stroke-white opacity-0 group-data-[checked]:opacity-100"
+                                    viewBox="0 0 14 14"
+                                    fill="none"
+                                >
+                                    <path
+                                        d="M3 8L6 11L11 3.5"
+                                        strokeWidth={2}
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                    />
+                                </svg>
+                            </Checkbox>
+                            <p className="font-mono text-md text-white">
+                                Send anonymously
+                            </p>
+                        </div>
+                        <div className="mt-4">
+                            <Button
+                                disabled={loading}
+                                className="bg-indigo-500 h-12 w-56 rounded-md"
+                                onClick={handlePostSubmission}
+                            >
+                                <p className="font-mono text-white text-md">
+                                    {loading ? "Loading..." : "Publish"}
+                                </p>
+                            </Button>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <h2 className="font-mono text-4xl my-8 text-center">Posts</h2>
-            <div className="px-24 flex flex-col gap-4">{postElements}</div>
         </div>
     );
 }

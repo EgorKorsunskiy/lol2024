@@ -1,19 +1,12 @@
 import React, { useContext, useEffect, useState } from "react";
-import {
-    Button,
-    Dialog,
-    DialogPanel,
-    DialogTitle,
-} from "@headlessui/react";
+import { Button, Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 import { DBContext } from "../contexts";
-import {
-    collection,
-    getDocs,
-    addDoc
-} from "firebase/firestore";
+import logoImage from "../images/logo.png";
+import qrCodeImage from "../images/qr-code.png";
+import { collection, getDocs, addDoc } from "firebase/firestore";
 
 function HomePage() {
     const [isOpen, setIsOpen] = useState(false);
@@ -25,7 +18,10 @@ function HomePage() {
 
     const getUsers = async () => {
         const data = await getDocs(usersCollectionRef);
-        const userData = data.docs.map((doc) => ({...doc.data(), innerId: doc.id}));
+        const userData = data.docs.map((doc) => ({
+            ...doc.data(),
+            innerId: doc.id,
+        }));
 
         return userData;
     };
@@ -45,8 +41,8 @@ function HomePage() {
             createUser(user.sub, 0);
         } else {
             setCoins(currentUser.coins);
-            localStorage.setItem("coins", currentUser.coins)
-            localStorage.setItem("id", currentUser.innerId)
+            localStorage.setItem("coins", currentUser.coins);
+            localStorage.setItem("id", currentUser.innerId);
         }
     };
 
@@ -59,20 +55,13 @@ function HomePage() {
     return (
         <div className="mt-48">
             <div className="absolute flex gap-6 h-12 right-8 top-8 items-center">
-                {!isAuthenticated ? (
+                {!isAuthenticated && (
                     <Button
                         onClick={loginWithRedirect}
                         className="bg-indigo-500 h-10 w-28 rounded-md"
                     >
                         <p className="font-mono text-white">Sign in</p>
                     </Button>
-                ) : (
-                    <div
-                        className="h-12 w-12 rounded-full overflow-hidden cursor-pointer"
-                        onClick={() => setIsOpen(true)}
-                    >
-                        <img src={user?.picture} />
-                    </div>
                 )}
                 {isAuthenticated && (
                     <Button
@@ -142,23 +131,50 @@ function HomePage() {
                     </Dialog>
                 )}
             </AnimatePresence>
-            <div className="flex justify-center">
-                <h1 className="font-mono text-[6rem]">LOL 2024</h1>
-            </div>
-            <div className="mt-[12rem] flex justify-center">
-                <div className="flex gap-6 flex-col">
-                    <Button
-                        className="h-12 w-96 rounded bg-[#9db6cc]"
-                        onClick={() => navigate("/study")}
+            <div className="grid grid-cols-4 gap-16">
+                <div className="flex justify-center items-center w-56 px-8 bg-[#2B777C]">
+                    <div className="flex gap-6 flex-col w-full">
+                        <Button
+                            className="h-12 w-full rounded bg-[#81ACAB]"
+                            onClick={() => navigate("/study")}
+                        >
+                            <h2 className="text-white font-mono font-semibold text-mxl">
+                                Study
+                            </h2>
+                        </Button>
+                        <Button
+                            className="h-12 w-full rounded bg-[#81ACAB]"
+                            onClick={() => navigate("/communication")}
+                        >
+                            <h2 className="text-white font-mono font-semibold text-mxl">
+                                Communication
+                            </h2>
+                        </Button>
+                    </div>
+                </div>
+                <div className="flex justify-center col-span-2">
+                    <img src={logoImage} />
+                </div>
+                <div className="flex flex-col justify-between items-end pr-8">
+                    {isAuthenticated && (
+                        <div className="flex flex-col gap-4">
+                            <p className="font-mono text-white text-2xl font-medium text-center">
+                                {user?.nickname}
+                            </p>
+                            <div
+                                className="h-48 w-48 cursor-pointer"
+                                onClick={() => setIsOpen(true)}
+                            >
+                                <img className="w-full" src={user?.picture} />
+                            </div>
+                        </div>
+                    )}
+                    <div
+                        className="h-52 w-52 cursor-pointer"
+                        onClick={() => setIsOpen(true)}
                     >
-                        <h2 className="text-white font-mono text-md">Study</h2>
-                    </Button>
-                    <Button
-                        className="h-12 w-96 rounded bg-[#397896]"
-                        onClick={() => navigate("/communication")}
-                    >
-                        <h2 className="text-white font-mono">Communication</h2>
-                    </Button>
+                        <img className="w-full" src={qrCodeImage} />
+                    </div>
                 </div>
             </div>
         </div>

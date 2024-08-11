@@ -4,28 +4,26 @@ import HomePage from "./pages/home-page";
 import StudyPage from "./pages/study-page";
 import { initializeApp } from "firebase/app";
 import { DBContext } from "./contexts";
-import {getFirestore} from "@firebase/firestore"
+import { getFirestore } from "@firebase/firestore";
 import ProblemPage from "./pages/problem-page";
 
 const firebaseConfig = {
-    apiKey: "AIzaSyAAOCCDwNbQyyvcbtfroUgTitI30TH7QAU",
-    authDomain: "test-782d0.firebaseapp.com",
-    databaseURL: "https://test-782d0.firebaseio.com",
-    projectId: "test-782d0",
-    storageBucket: "test-782d0.appspot.com",
-    messagingSenderId: "362872276",
-    appId: "1:362872276:web:1c1d31063e5648b5e36a41",
-    measurementId: "G-KTK49TPLVT",
+    apiKey: "AIzaSyDIB9wMTOJ3dvkONsFkkBY7Hs8L8GO7LLA",
+    authDomain: "lolsite2024-41ae1.firebaseapp.com",
+    projectId: "lolsite2024-41ae1",
+    storageBucket: "lolsite2024-41ae1.appspot.com",
+    messagingSenderId: "503935093149",
+    appId: "1:503935093149:web:5c01fcd72d2fc0f2218774",
 };
 
 function App() {
     // Initialize Firebase
     const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app)
+    const db = getFirestore(app);
 
     return (
         <div>
-            <DBContext.Provider value={{db}}>
+            <DBContext.Provider value={{ db }}>
                 <Router>
                     <Routes>
                         <Route path="/" element={<HomePage />} />
@@ -34,7 +32,10 @@ function App() {
                             element={<CommunicationPage />}
                         />
                         <Route path="/study" element={<StudyPage />} />
-                        <Route path="/problem/:tabId/:problemId" element={<ProblemPage />} />
+                        <Route
+                            path="/problem/:tabId/:problemId"
+                            element={<ProblemPage />}
+                        />
                     </Routes>
                 </Router>
             </DBContext.Provider>

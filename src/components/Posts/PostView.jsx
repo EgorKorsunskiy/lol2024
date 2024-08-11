@@ -15,28 +15,28 @@ function PostView({ nickname, picture, post, fetchPosts }) {
     };
 
     return (
-        <div className="relative rounded-xl shadow-lg p-6">
+        <div className="relative rounded-xl bg-[#2B777C] p-6">
             <div className="flex gap-4 mb-4">
                 {nickname && picture ? (
                     <>
-                        <p className="font-mono text-md">Posted by</p>
+                        <p className="font-mono text-md text-[#B1D06A]">Posted by</p>
                         <div className="flex gap-2 items-center">
                             <img
                                 className="h-6 w-6 rounded-full"
                                 src={picture}
                             />
-                            <p className="font-mono font-medium text-md">
+                            <p className="font-mono font-medium text-md text-[#B1D06A]">
                                 {nickname}
                             </p>
                         </div>
                     </>
                 ) : (
-                    <p className="font-mono font-medium text-md">
+                    <p className="font-mono font-medium text-md text-[#B1D06A]">
                         Posted anonymously
                     </p>
                 )}
             </div>
-            <div dangerouslySetInnerHTML={{ __html: post.content }}></div>
+            <div className="text-white" dangerouslySetInnerHTML={{ __html: post.content }}></div>
             <div className="flex justify-end gap-6">
                 <div
                     className="flex gap-2 items-center cursor-pointer"

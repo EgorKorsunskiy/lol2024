@@ -1,4 +1,4 @@
-import React, { useContext, useMemo, useState } from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { PROBLEMS } from "../constatns/problems";
 import { Input, Button } from "@headlessui/react";
@@ -22,7 +22,7 @@ function ProblemPage() {
         const coins = localStorage.getItem("coins");
         const id = localStorage.getItem("id");
         const userDoc = doc(db, "users", id);
-        const newFields = { coins: +coins + 1 };
+        const newFields = { coins: +coins + PROBLEMS[tabId].reward };
         await updateDoc(userDoc, newFields);
     };
 
@@ -44,7 +44,7 @@ function ProblemPage() {
     };
 
     return (
-        <>
+        <div className="h-[100vh] bg-white -mt-12">
             <Button
                 onClick={() => navigate("/")}
                 className="bg-indigo-500 h-10 w-28 rounded-md mb-6 absolute left-6 top-6"
@@ -98,7 +98,7 @@ function ProblemPage() {
                     </div>
                 )}
             </div>
-        </>
+        </div>
     );
 }
 
