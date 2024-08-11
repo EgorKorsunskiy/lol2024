@@ -7,6 +7,7 @@ import { Button } from "@headlessui/react";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
+import floodlogo from '../images/floodlogo.png';
 
 function CommunicationPage() {
     const { db } = useContext(DBContext);
@@ -70,6 +71,7 @@ function CommunicationPage() {
 
     return (
         <div>
+                   <img src={floodlogo} className="mb-0 right-1 absolute h-[240px] w-[600px]"></img>
             <div className="p-8 px-24 border-b-2 border-indigo-500">
                 <Button
                     onClick={() => navigate("/")}
